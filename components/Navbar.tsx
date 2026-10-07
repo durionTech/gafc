@@ -12,12 +12,12 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
 
   const links = [
-    { name: "About Us", href: "#about" },
-    { name: "Ministries", href: "#ministries" },
-    { name: "Sermons", href: "#sermons" },
-    { name: "Events", href: "#events" },
-    { name: "Give", href: "#give" },
-    { name: "Visit Us", href: "#visit" },
+    { name: "About Us", href: "#about" }, 
+    { name: "Events", href: "/events" }, 
+    { name: "Testimonies", href: "/testimonials" },
+    { name: "Hit Songs", href: "/hit-songs" },
+    { name: "Ministries", href: "/ministries" },
+    { name: "Monthly Promise", href: "/monthly-promise" },
   ];
 
   return (

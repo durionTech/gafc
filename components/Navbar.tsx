@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import {
   Menu,
@@ -9,6 +10,7 @@ import {
 } from "lucide-react";
 
 export default function Navbar() {
+  const router = useRouter();
   const [open, setOpen] = useState(false);
 
   const links = [
@@ -59,12 +61,12 @@ export default function Navbar() {
         {/* Right Actions */}
         <div className="hidden items-center gap-3 md:flex">
 
-          <button className="flex items-center gap-2 rounded-md border border-[#d8ccb4] bg-[#f9f6ed] px-4 py-2 text-sm font-medium text-[#4d463d] transition hover:border-[#b18a2b]">
+          <button onClick={() => router.push("/prayer-request")} className="flex items-center gap-2 rounded-md border border-[#d8ccb4] bg-[#f9f6ed] px-4 py-2 text-sm font-medium text-[#4d463d] transition hover:border-[#b18a2b]">
             <HeartHandshake className="h-4 w-4 text-[#9d7b22]" />
             Prayer
           </button>
 
-          <button className="flex items-center gap-2 rounded-md bg-[#8a1724] px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-[#70131e]">
+          <button  className="flex items-center gap-2 rounded-md bg-[#8a1724] px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-[#70131e]">
             <span>▶</span>
             Watch Online
           </button> 

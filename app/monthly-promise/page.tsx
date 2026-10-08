@@ -1,63 +1,101 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import TopBar from "@/components/TopBar";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { supabase } from "@/lib/supabaseClient";
+import { Loader2, X } from "lucide-react";
 
-const months = [
-  {
-    month: "October 2026",
-    folder: "october",
-    days: 31,
-    verse:
-      "For I know the plans I have for you, declares the Lord, plans for welfare and not for evil, to give you a future and a hope.",
-    reference: "Jeremiah 29:11",
-  },
-  {
-    month: "September 2026",
-    folder: "september",
-    days: 30,
-    verse: "",
-    reference: "",
-  },
-  {
-    month: "August 2026",
-    folder: "august",
-    days: 31,
-    verse: "",
-    reference: "",
-  },
-  {
-    month: "July 2026",
-    folder: "july",
-    days: 31,
-    verse: "",
-    reference: "",
-  },
+type MonthlyPromise = {
+  id: string;
+  month: number;
+  year: number;
+  month_promise_image: string | null;
+};
+
+type DailyPromise = {
+  id: string;
+  monthly_promise_id: string;
+  day: number;
+  image_url: string;
+};
+
+const monthNames = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
 ];
 
-function getDayImage(folder: string, day: number) {
-  return `/images/promises/${folder}/${folder.slice(0, 3)}-${String(
-    day
-  ).padStart(2, "0")}.jpg`;
-}
-
 export default function MonthlyPromisePage() {
-  const currentMonth = months[0];
-  const previousMonths = months.slice(1);
+  const [months, setMonths] = useState<MonthlyPromise[]>([]);
+  const [selectedMonth, setSelectedMonth] =
+    useState<MonthlyPromise | null>(null);
 
-  // Selected daily promise image
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  const [selectedMonthIndex, setSelectedMonthIndex] = useState<number | null>( null);
+  const [dailyPromises, setDailyPromises] =
+    useState<DailyPromise[]>([]);
+
+  const [selectedImage, setSelectedImage] =
+    useState<string | null>(null);
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    loadPromises();
+  }, []);
+
+  const loadPromises = async () => {
+    setLoading(true);
+
+    const { data } = await supabase
+      .from("monthly_promises")
+      .select("*")
+      .order("year", { ascending: false })
+      .order("month", { ascending: false });
+
+    const result = data || [];
+
+    setMonths(result);
+
+    if (result.length > 0) {
+      await loadDailyPromises(result[0]);
+    }
+
+    setLoading(false);
+  };
+
+  const loadDailyPromises = async (
+    monthData: MonthlyPromise
+  ) => {
+    setSelectedMonth(monthData);
+
+    const { data } = await supabase
+      .from("daily_promises")
+      .select("*")
+      .eq("monthly_promise_id", monthData.id)
+      .order("day", { ascending: true });
+
+    setDailyPromises(data || []);
+  };
 
   return (
     <main className="min-h-screen bg-[#faf8f2]">
+
       <TopBar />
       <Navbar />
 
       {/* HERO */}
       <section className="bg-[#151512] px-6 py-16 text-center">
+
         <p className="mb-3 text-sm font-semibold uppercase tracking-[0.3em] text-[#d4af37]">
           Faith • Hope • Love
         </p>
@@ -69,286 +107,188 @@ export default function MonthlyPromisePage() {
         <p className="mx-auto mt-4 max-w-xl text-sm leading-6 text-white/70">
           God's promise for every month and every day.
         </p>
+
       </section>
 
-      {/* CURRENT MONTH */}
-      <section className="px-5 py-14 md:px-8 lg:px-12">
-        <div className="mx-auto max-w-7xl"> 
-           {/* MONTH PROMISE + DAILY CALENDAR */}
-<div className="grid gap-10 lg:grid-cols-[380px_1fr] lg:items-start">
-
-  {/* LEFT - MONTH PROMISE IMAGE */}
-  <div className="lg:sticky lg:top-24">
-    <div className="mb-5">
-      <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#8b1e1e]">
-        Monthly Promise
-      </p>
-
-      <h3 className="mt-2 font-[var(--font-playfair)] text-2xl font-bold text-[#151512]">
-        {currentMonth.month}
-      </h3>
-    </div>
-
-    <div className="overflow-hidden rounded-2xl border border-[#d4af37]/30 bg-white shadow-xl">
-      <img
-        src={`/images/promises/${currentMonth.folder}/month-promise.jpg`}
-        alt={`${currentMonth.month} Monthly Promise`}
-        className="h-auto w-full object-contain"
-      />
-    </div>
-  </div>
-
-
-  {/* RIGHT - DAILY CALENDAR */}
-  <div>
-    <div className="mb-7">
-      <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#8b1e1e]">
-        Daily Promises
-      </p>
-
-      <h3 className="mt-2 font-[var(--font-playfair)] text-2xl font-bold text-[#151512] md:text-3xl">
-        {currentMonth.month} — Every Day
-      </h3>
-    </div>
-
-    {/* CALENDAR GRID */}
-    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5">
-
-      {Array.from(
-        { length: currentMonth.days },
-        (_, index) => index + 1
-      ).map((day) => (
-
-        <div
-          key={day}
-          onClick={() =>
-            setSelectedImage(
-              getDayImage(currentMonth.folder, day)
-            )
-          }
-          className="group cursor-pointer overflow-hidden rounded-xl border border-[#d4af37]/20 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl"
-        >
-
-          {/* DATE HEADER */}
-          <div className="flex items-center justify-between bg-[#151512] px-3 py-2">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-[#d4af37]">
-              OCT
-            </span>
-
-            <span className="text-sm font-bold text-white">
-              {String(day).padStart(2, "0")}
-            </span>
-          </div>
-
-          {/* DAILY IMAGE */}
-          <div className="flex aspect-square items-center justify-center overflow-hidden bg-[#faf8f2]">
-            <img
-              src={getDayImage(currentMonth.folder, day)}
-              alt={`${currentMonth.month} Day ${day}`}
-              className="h-full w-full object-contain p-1 transition duration-300 group-hover:scale-[1.03]"
-            />
-          </div>
-
+      {loading ? (
+        <div className="flex min-h-[400px] items-center justify-center">
+          <Loader2
+            className="animate-spin text-[#8b1e1e]"
+            size={32}
+          />
         </div>
+      ) : selectedMonth ? (
 
-      ))}
+        <section className="px-5 py-14 md:px-8 lg:px-12">
 
-    </div>
-    {/* PREVIOUS MONTH BUTTON */}
-<div className="mt-12 text-center">
-  <button
-    onClick={() => setSelectedMonthIndex(1)}
-    className="inline-flex items-center gap-2 rounded-full bg-[#151512] px-7 py-3 text-sm font-semibold text-[#d4af37] shadow-md transition hover:bg-[#8b1e1e] hover:text-white"
-  >
-    View Previous Months
-    <span className="text-lg">→</span>
-  </button>
-</div>
-  </div>
+          <div className="mx-auto max-w-7xl">
 
-</div>
-        </div>
-      </section>
+            {/* MONTH SELECTOR */}
+            {months.length > 1 && (
+              <div className="mb-10 flex flex-wrap gap-3">
 
- {/* PREVIOUS MONTH */}
-{selectedMonthIndex !== null && (
-  <section className="bg-white px-5 py-16 md:px-8 lg:px-12">
-    <div className="mx-auto max-w-7xl">
+                {months.map((item) => (
+                  <button
+                    key={item.id}
+                    onClick={() =>
+                      loadDailyPromises(item)
+                    }
+                    className={`rounded-full px-5 py-2.5 text-sm font-semibold transition ${
+                      selectedMonth.id === item.id
+                        ? "bg-[#151512] text-[#d4af37]"
+                        : "border border-[#151512]/20 bg-white text-[#151512] hover:bg-[#151512] hover:text-white"
+                    }`}
+                  >
+                    {monthNames[item.month - 1]}{" "}
+                    {item.year}
+                  </button>
+                ))}
 
-      {/* HEADER */}
-      <div className="mb-10 flex flex-col items-start justify-between gap-5 sm:flex-row sm:items-center">
-        <div>
-          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#8b1e1e]">
-            Previous Month
-          </p>
+              </div>
+            )}
 
-          <h2 className="mt-2 font-[var(--font-playfair)] text-3xl font-bold text-[#151512] md:text-4xl">
-            {months[selectedMonthIndex].month}
-          </h2>
-        </div>
+            {/* MONTH + DAILY */}
+            <div className="grid gap-10 lg:grid-cols-[380px_1fr] lg:items-start">
 
-        {/* BACK BUTTON */}
-        <button
-          onClick={() => setSelectedMonthIndex(null)}
-          className="rounded-full border border-[#151512]/20 bg-[#faf8f2] px-5 py-2.5 text-sm font-semibold text-[#151512] transition hover:bg-[#151512] hover:text-white"
-        >
-          ← Back to October
-        </button>
-      </div>
+              {/* MONTHLY PROMISE */}
+              <div className="lg:sticky lg:top-24">
 
-      {/* MONTH + DAILY CALENDAR */}
-      <div className="grid gap-10 lg:grid-cols-[380px_1fr] lg:items-start">
+                <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#8b1e1e]">
+                  Monthly Promise
+                </p>
 
-        {/* LEFT - MONTH PROMISE */}
-        <div className="lg:sticky lg:top-24">
+                <h2 className="mt-2 font-[var(--font-playfair)] text-2xl font-bold text-[#151512]">
+                  {monthNames[selectedMonth.month - 1]}{" "}
+                  {selectedMonth.year}
+                </h2>
 
-          <div className="mb-5">
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#8b1e1e]">
-              Monthly Promise
-            </p>
+                {selectedMonth.month_promise_image ? (
+                  <div
+                    className="mt-5 cursor-pointer overflow-hidden rounded-2xl border border-[#d4af37]/30 bg-white shadow-xl"
+                    onClick={() =>
+                      setSelectedImage(
+                        selectedMonth.month_promise_image
+                      )
+                    }
+                  >
+                    <img
+                      src={
+                        selectedMonth.month_promise_image
+                      }
+                      alt="Monthly Promise"
+                      className="h-auto w-full object-contain"
+                    />
+                  </div>
+                ) : (
+                  <div className="mt-5 rounded-2xl bg-white p-10 text-center text-sm text-gray-500">
+                    Monthly promise image not available.
+                  </div>
+                )}
 
-            <h3 className="mt-2 font-[var(--font-playfair)] text-2xl font-bold text-[#151512]">
-              {months[selectedMonthIndex].month}
-            </h3>
-          </div>
+              </div>
 
-          <div className="overflow-hidden rounded-2xl border border-[#d4af37]/30 bg-[#faf8f2] shadow-xl">
-            <img
-              src={`/images/promises/${months[selectedMonthIndex].folder}/month-promise.jpg`}
-              alt={`${months[selectedMonthIndex].month} Monthly Promise`}
-              className="h-auto w-full object-contain"
-            />
-          </div>
+              {/* DAILY */}
+              <div>
 
-        </div>
+                <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#8b1e1e]">
+                  Daily Promises
+                </p>
 
+                <h2 className="mt-2 font-[var(--font-playfair)] text-2xl font-bold text-[#151512] md:text-3xl">
+                  {monthNames[selectedMonth.month - 1]}{" "}
+                  {selectedMonth.year} — Every Day
+                </h2>
 
-        {/* RIGHT - DAILY CALENDAR */}
-        <div>
+                <div className="mt-7 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5">
 
-          <div className="mb-7">
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#8b1e1e]">
-              Daily Promises
-            </p>
+                  {dailyPromises.map((item) => (
+                    <div
+                      key={item.id}
+                      onClick={() =>
+                        setSelectedImage(item.image_url)
+                      }
+                      className="group cursor-pointer overflow-hidden rounded-xl border border-[#d4af37]/20 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl"
+                    >
 
-            <h3 className="mt-2 font-[var(--font-playfair)] text-2xl font-bold text-[#151512] md:text-3xl">
-              {months[selectedMonthIndex].month} — Every Day
-            </h3>
-          </div>
+                      <div className="flex items-center justify-between bg-[#151512] px-3 py-2">
 
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-[#d4af37]">
+                          {monthNames[
+                            selectedMonth.month - 1
+                          ].slice(0, 3)}
+                        </span>
 
-          {/* CALENDAR */}
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5">
+                        <span className="text-sm font-bold text-white">
+                          {String(item.day).padStart(2, "0")}
+                        </span>
 
-            {Array.from(
-              { length: months[selectedMonthIndex].days },
-              (_, index) => index + 1
-            ).map((day) => (
+                      </div>
 
-              <div
-                key={day}
-                onClick={() =>
-                  setSelectedImage(
-                    getDayImage(
-                      months[selectedMonthIndex].folder,
-                      day
-                    )
-                  )
-                }
-                className="group cursor-pointer overflow-hidden rounded-xl border border-[#d4af37]/20 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl"
-              >
+                      <div className="aspect-square overflow-hidden bg-[#faf8f2]">
 
-                {/* DATE HEADER */}
-                <div className="flex items-center justify-between bg-[#151512] px-3 py-2">
+                        <img
+                          src={item.image_url}
+                          alt={`Day ${item.day}`}
+                          className="h-full w-full object-contain p-1 transition duration-300 group-hover:scale-[1.03]"
+                        />
 
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-[#d4af37]">
-                    {months[selectedMonthIndex].folder
-                      .slice(0, 3)
-                      .toUpperCase()}
-                  </span>
+                      </div>
 
-                  <span className="text-sm font-bold text-white">
-                    {String(day).padStart(2, "0")}
-                  </span>
-
-                </div>
-
-
-                {/* DAILY IMAGE */}
-                <div className="flex aspect-square items-center justify-center overflow-hidden bg-[#faf8f2]">
-
-                  <img
-                    src={getDayImage(
-                      months[selectedMonthIndex].folder,
-                      day
-                    )}
-                    alt={`${months[selectedMonthIndex].month} Day ${day}`}
-                    className="h-full w-full object-contain p-1 transition duration-300 group-hover:scale-[1.03]"
-                  />
+                    </div>
+                  ))}
 
                 </div>
 
               </div>
 
-            ))}
+            </div>
 
           </div>
 
-        </div>
+        </section>
 
-      </div>
+      ) : (
+        <section className="px-6 py-24 text-center">
+          <h2 className="font-[var(--font-playfair)] text-2xl font-bold">
+            No Monthly Promise Available
+          </h2>
 
-
-      {/* NEXT PREVIOUS MONTH BUTTON */}
-      {selectedMonthIndex < months.length - 1 && (
-        <div className="mt-14 text-center">
-
-          <button
-            onClick={() =>
-              setSelectedMonthIndex(selectedMonthIndex + 1)
-            }
-            className="inline-flex items-center gap-2 rounded-full bg-[#151512] px-7 py-3 text-sm font-semibold text-[#d4af37] shadow-md transition hover:bg-[#8b1e1e] hover:text-white"
-          >
-            View{" "}
-            {months[selectedMonthIndex + 1].month}
-            <span className="text-lg">→</span>
-          </button>
-
-        </div>
+          <p className="mt-3 text-sm text-gray-600">
+            Please check back soon.
+          </p>
+        </section>
       )}
 
-    </div>
-  </section>
-)}
-      {/* IMAGE ZOOM MODAL */}
+      {/* IMAGE MODAL */}
       {selectedImage && (
         <div
           className="fixed inset-0 z-[100] flex items-center justify-center bg-black/85 p-4"
           onClick={() => setSelectedImage(null)}
         >
-          {/* CLOSE BUTTON */}
+
           <button
             onClick={() => setSelectedImage(null)}
-            className="absolute right-5 top-5 z-[110] flex h-11 w-11 items-center justify-center rounded-full bg-white text-3xl font-light leading-none text-black shadow-xl transition hover:bg-[#d4af37]"
-            aria-label="Close image"
+            className="absolute right-5 top-5 z-[110] flex h-11 w-11 items-center justify-center rounded-full bg-white text-black shadow-xl hover:bg-[#d4af37]"
           >
-            ×
+            <X size={25} />
           </button>
 
-          {/* IMAGE */}
           <div
             className="flex max-h-[95vh] max-w-5xl items-center justify-center"
             onClick={(e) => e.stopPropagation()}
           >
             <img
               src={selectedImage}
-              alt="Daily Promise"
+              alt="Promise"
               className="max-h-[92vh] max-w-full rounded-lg object-contain shadow-2xl"
             />
           </div>
+
         </div>
-      )} 
+      )}
+
       <Footer />
+
     </main>
   );
 }

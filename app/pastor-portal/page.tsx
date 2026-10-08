@@ -28,7 +28,7 @@ export default function PastorLoginPage() {
       setLoading(false);
     } else if (data.session) {
       // Redirect pastor straight back to the calendar page upon successful login
-     router.push("/pastor-portal/events");
+     router.push("/pastor-portal/dashboard");
     }
   };
 

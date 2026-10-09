@@ -198,7 +198,7 @@ export default function Footer() {
                 <p className="text-sm leading-6 text-gray-400">
                   Grace Apostolic Faith Church Trust
                   <br />
-                  Chennai, Tamil Nadu
+                  Chennai, Tamil NaduNo:25, Thendral Nagar, 4th Main Road, Hindu College, Pattabiram, Chennai :-600072
                 </p>
               </div>
 
@@ -206,10 +206,10 @@ export default function Footer() {
                 <Phone className="h-5 w-5 shrink-0 text-[#D4AF37]" />
 
                 <a
-                  href="tel:+919XXXXXXXXX"
+                  href="tel:+919884088744"
                   className="text-sm text-gray-400 transition hover:text-white"
                 >
-                  +91 9XXXXXXXXX
+                  +91 9884088744
                 </a>
               </div>
 
@@ -217,10 +217,10 @@ export default function Footer() {
                 <Mail className="h-5 w-5 shrink-0 text-[#D4AF37]" />
 
                 <a
-                  href="mailto:info@gafc.org"
+                  href="mailto: gafc.official@gmail.com"
                   className="break-all text-sm text-gray-400 transition hover:text-white"
                 >
-                  info@gafc.org
+                   gafc.official@gmail.com
                 </a>
               </div>
 

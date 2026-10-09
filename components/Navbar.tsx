@@ -14,7 +14,7 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
 
   const links = [
-    { name: "About Us", href: "#about" }, 
+    { name: "About Us", href: "/about" }, 
     { name: "Events", href: "/events" }, 
     { name: "Testimonies", href: "/testimonials" },
     { name: "Hit Songs", href: "/hit-songs" },

@@ -155,7 +155,7 @@ export default function PrayerRequestPage() {
                     setPrayerRequest(e.target.value)
                   }
                   placeholder="Please share your prayer request..."
-                  rows={6}
+                  rows={3}
                   required
                   className="w-full resize-none rounded-lg border border-gray-300 px-4 py-3 outline-none focus:border-[#d4af37]"
                 />

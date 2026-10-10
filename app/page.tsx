@@ -7,10 +7,12 @@ import FAQ from "@/components/FAQ";
 import WatchAndWord from "@/components/WatchAndWord";
 import Gallery from "@/components/Gallery";
 import Footer from "@/components/Footer";
+import VerseBar from "@/components/VerseBar";
 export default function Home() {
   return (
     <main className="min-h-screen bg-[#faf8f2]"> 
       <TopBar /> 
+      <VerseBar />
       <Navbar /> 
       <Hero />
       <HeartCalling />

@@ -4,6 +4,8 @@
 import { useRouter } from "next/navigation";
 import { CalendarDays, Heart, LogOut } from "lucide-react";
 import { supabase } from "@/lib/supabaseClient";
+import Link from "next/link";
+import { BookOpen } from "lucide-react";
 
 export default function PastorDashboard() {
   const router = useRouter();
@@ -120,6 +122,25 @@ export default function PastorDashboard() {
                       View Requests →
                     </span>
                   </button>
+                  
+<Link
+  href="/pastor-portal/daily-verse"
+  className="group rounded-2xl border border-[#d4af37]/30 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
+>
+  <BookOpen className="mb-4 text-[#8b1e1e]" size={30} />
+
+  <h2 className="text-xl font-bold text-[#151512]">
+    Daily Bible Verse
+  </h2>
+
+  <p className="mt-2 text-sm text-gray-500">
+    Add or update the verse displayed on the homepage.
+  </p>
+
+  <span className="mt-4 inline-block font-semibold text-[#8b1e1e]">
+    Manage Verse →
+  </span>
+</Link>
           </div>
         </div>
       </section>

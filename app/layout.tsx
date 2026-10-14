@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Playfair_Display, Inter } from "next/font/google";
 import "./globals.css";
+import FloatingWidgets from "@/components/FloatingWidgets";
 
 const playfair = Playfair_Display({
   variable: "--font-playfair",
@@ -30,6 +31,8 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${playfair.variable} ${inter.variable}`}>
         {children}
+        {/* Floating Side Tab & Back to Top Button */}
+        <FloatingWidgets />
       </body>
     </html>
   );

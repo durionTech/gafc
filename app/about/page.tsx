@@ -238,7 +238,6 @@ export default function AboutPage() {
               },
             ].map((item) => {
               const Icon = item.icon;
-
               return (
                 <div
                   key={item.title}
@@ -247,22 +246,18 @@ export default function AboutPage() {
                   <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-[#151512]">
                     <Icon className="text-[#d4af37]" size={25} />
                   </div>
-
                   <h3 className="mt-5 font-[var(--font-playfair)] text-xl font-bold">
                     {item.title}
                   </h3>
-
                   <p className="mt-3 text-sm leading-6 text-gray-600">
                     {item.text}
                   </p>
                 </div>
               );
             })}
-
           </div>
         </div>
       </section>
-
       {/* CTA */}
       <section className="bg-[#151512] px-6 py-20">
         <div className="mx-auto max-w-4xl text-center">

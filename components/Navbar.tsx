@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -7,6 +8,7 @@ import {
   X,
   UserCircle,
   HeartHandshake,
+  Play,
 } from "lucide-react";
 
 export default function Navbar() {
@@ -66,10 +68,17 @@ export default function Navbar() {
             Prayer
           </button>
 
-          <button  className="flex items-center gap-2 rounded-md bg-[#8a1724] px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-[#70131e]">
+          {/* <button  className="flex items-center gap-2 rounded-md bg-[#8a1724] px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-[#70131e]">
             <span>▶</span>
             Watch Online
-          </button> 
+          </button>  */}
+          <Link
+      href="/watch-online"
+      className="inline-flex items-center gap-2 rounded-md bg-[#8a1724] px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-[#70131e]"
+    >
+      <Play size={16} className="fill-current" />
+      <span>Watch Online</span>
+    </Link>
         </div>
 
         {/* Mobile menu button */}

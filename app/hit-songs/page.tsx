@@ -13,8 +13,13 @@ import {
 import TopBar from "@/components/TopBar";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-
-const songs = [
+type Song = {
+  title: string;
+  artist: string;
+  image: string;
+  youtube: string;
+};
+const songs: Song[] = [
   {
     title: "உம் பாதம் பணிந்தேன் (FAST BEAT) | Um Patham Paninthen",
     artist: "Rev. Samuel Issac Newton J",
@@ -206,7 +211,7 @@ function SongRow({
   songs,
 }: {
   title: string;
-  songs: typeof songs;
+  songs: Song[];
 }) {
   return (
     <div>
@@ -259,11 +264,7 @@ function SongRow({
    SONG CARD
 ===================================================== */
 
-function SongCard({
-  song,
-}: {
-  song: (typeof songs)[number];
-}) {
+function SongCard({ song }: { song: Song }) {
   return (
     <div
       className="

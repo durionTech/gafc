@@ -13,12 +13,13 @@ const inter = Inter({
   subsets: ["latin"],
 });
 
+
 export const metadata: Metadata = {
   title: "Grace Apostolic Faith Church Trust",
   description:
     "A Christ-centered community grounded in faith, hope and love.",
   icons: {
-    icon: "/gafc_logo.jpeg",
+    icon: "/images/gafc_logo.jpeg",
   },
 };
 
@@ -37,3 +38,7 @@ export default function RootLayout({
     </html>
   );
 }
+
+
+
+

@@ -58,6 +58,11 @@ export default function PastorDashboard() {
       icon: BookOpen,
       description: "Add or update the verse displayed on the homepage.",
     },
+    {
+      name: "Blogs & Articles",
+      href: "/pastor-portal/blogs",
+      icon: BookOpen,
+    },
   ];
 
   return (

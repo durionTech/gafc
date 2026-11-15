@@ -22,6 +22,7 @@ export default function Navbar() {
     { name: "Hit Songs", href: "/hit-songs" },
     { name: "Ministries", href: "/ministries" },
     { name: "Monthly Promise", href: "/monthly-promise" },
+    {name: "Blog", href:"/blog"}
   ];
 
   return (

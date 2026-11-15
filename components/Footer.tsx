@@ -140,8 +140,15 @@ export default function Footer() {
                 >
                   Contact
                 </Link>
+
+
               </li>
 
+<li>
+      <Link href="/blog" className="text-gray-400 transition hover:text-white">
+        Blog & Articles
+      </Link>
+    </li>
             </ul>
           </div>
 
@@ -230,41 +237,13 @@ export default function Footer() {
         </div>
       </div>
 
-
-      {/* Red CTA Section */}
-      <div className="border-t border-white/10 bg-[#8B1E1E]">
-
-        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-5 px-6 py-8 text-center md:flex-row md:text-left lg:px-8">
-
-          <div>
-            <h3 className="text-lg font-bold">
-              Need Prayer?
-            </h3>
-
-            <p className="mt-1 text-sm text-white/75">
-              We would love to pray with you and stand with you.
-            </p>
-          </div>
-
-          <Link
-            href="/prayer-request"
-            className="inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-bold text-[#8B1E1E] transition hover:bg-[#D4AF37] hover:text-black"
-          >
-            Submit Prayer Request
-            <ArrowUpRight className="h-4 w-4" />
-          </Link>
-
-        </div>
-      </div>
-
-
       {/* Bottom Bar */}
       <div className="border-t border-white/10 bg-[#0F0F0D]">
 
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 px-6 py-5 text-center md:flex-row md:text-left lg:px-8">
 
           <p className="text-xs text-gray-500">
-            © {new Date().getFullYear()} Grace Apostolic Faith Church Trust.
+            © {new Date().getFullYear()} Durion Technologie.
             All rights reserved.
           </p>
 
